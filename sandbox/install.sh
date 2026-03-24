@@ -8,8 +8,8 @@ BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
 
 LINKS=(
-  "sandbox/cc-sandbox.sh:cc-sandbox"
-  "sandbox/cc-manage.sh:cc-manage"
+  "cc-sandbox.sh:cc-sandbox"
+  "cc-manage.sh:cc-manage"
 )
 
 for entry in "${LINKS[@]}"; do

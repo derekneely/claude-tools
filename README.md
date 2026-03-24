@@ -31,7 +31,7 @@ Run Claude Code instances in isolated Docker containers with full permissions (`
 ./sandbox/cc-manage.sh nuke
 ```
 
-See [sandbox/cc-sandbox-tools.md](sandbox/cc-sandbox-tools.md) for full documentation.
+See [sandbox/README.md](sandbox/README.md) for full documentation.
 
 ### Prerequisites
 

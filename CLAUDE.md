@@ -7,7 +7,7 @@ This repo contains scripts, skills, and configuration for Derek's Claude Code se
 - `sandbox/` — Docker sandbox for running Claude Code in isolated containers
   - `cc-sandbox.sh` — Launch a sandboxed Claude Code instance
   - `cc-manage.sh` — Manage (list, stop, kill, remove) containers
-  - `cc-sandbox-tools.md` — Documentation for the sandbox tooling
+  - `install.sh` — Symlink sandbox scripts into `~/.local/bin`
   - `docker/` — Dockerfile and entrypoint script for the sandbox image
 
 ## Environment
