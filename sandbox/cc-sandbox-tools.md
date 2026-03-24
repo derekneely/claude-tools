@@ -12,12 +12,12 @@ Run Claude Code instances in isolated Docker containers with `--dangerously-skip
 
 | Script | Purpose |
 |---|---|
-| `cc-docker-wsl.sh` | Launch a new sandboxed Claude Code instance |
+| `cc-sandbox.sh` | Launch a new sandboxed Claude Code instance |
 | `cc-manage.sh` | List, stop, kill, and clean up instances |
 
 ## How It Works
 
-On first run, `cc-docker-wsl.sh` builds a Docker image (`claude-code-sandbox`) based on `node:lts` with Claude Code installed via the native installer. Each container:
+On first run, `cc-sandbox.sh` builds a Docker image (`claude-code-sandbox`) based on `node:lts` with Claude Code installed via the native installer. Each container:
 
 - Mounts your project directory into `/workspace` (read/write)
 - Mounts `~/.claude` and `~/.claude.json` from the host for auth and settings
@@ -25,12 +25,12 @@ On first run, `cc-docker-wsl.sh` builds a Docker image (`claude-code-sandbox`) b
 - Passes `ANTHROPIC_API_KEY` if set
 - Is started with `--rm` so stopped containers are automatically removed
 
-## cc-docker-wsl.sh
+## cc-sandbox.sh
 
 ### Usage
 
 ```bash
-cc-docker-wsl.sh <name> [project-dir] [claude args...]
+cc-sandbox.sh <name> [project-dir] [claude args...]
 ```
 
 - `<name>` — identifier for this instance (container will be named `cc-<name>`)
@@ -41,13 +41,13 @@ cc-docker-wsl.sh <name> [project-dir] [claude args...]
 
 ```bash
 # Start an instance for a specific project
-~/cc-docker-wsl.sh my-feature ~/work/my-project
+~/cc-sandbox.sh my-feature ~/work/my-project
 
 # Start with a prompt
-~/cc-docker-wsl.sh quick-fix . "fix the broken login test"
+~/cc-sandbox.sh quick-fix . "fix the broken login test"
 
 # Rebuild the image (e.g., after a Claude Code update)
-docker rmi claude-code-sandbox && ~/cc-docker-wsl.sh my-feature
+docker rmi claude-code-sandbox && ~/cc-sandbox.sh my-feature
 ```
 
 ## cc-manage.sh

@@ -121,7 +121,7 @@ cmd_nuke() {
 cmd_rebuild() {
   if docker image inspect "$IMAGE_NAME" &>/dev/null; then
     docker rmi "$IMAGE_NAME"
-    echo "Image '$IMAGE_NAME' removed. It will rebuild on next cc-docker-wsl.sh run."
+    echo "Image '$IMAGE_NAME' removed. It will rebuild on next cc-sandbox.sh run."
   else
     echo "Image '$IMAGE_NAME' does not exist."
   fi
