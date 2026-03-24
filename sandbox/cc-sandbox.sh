@@ -15,7 +15,7 @@
 set -euo pipefail
 
 IMAGE_NAME="claude-code-sandbox"
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 if [[ $# -lt 1 ]]; then
   echo "Usage: cc-sandbox.sh <name> [project-dir] [claude args...]"
@@ -48,14 +48,16 @@ echo "==> UID/GID:   $HOST_UID:$HOST_GID"
 echo "==> Starting Claude Code in Docker..."
 
 # Build volume mounts
+# Host .claude is mounted read-only to a staging path; the entrypoint copies it
+# to the real location so Claude Code gets a writable, isolated copy.
 VOLUMES=(
   -v "$PROJECT_DIR":/workspace
-  -v "$HOME/.claude":/home/node/.claude
+  -v "$HOME/.claude":/tmp/claude-host:ro
 )
 
 # Only mount .claude.json if it exists
 if [[ -f "$HOME/.claude.json" ]]; then
-  VOLUMES+=(-v "$HOME/.claude.json":/home/node/.claude.json)
+  VOLUMES+=(-v "$HOME/.claude.json":/tmp/claude-host.json:ro)
 fi
 
 docker run --rm -it \

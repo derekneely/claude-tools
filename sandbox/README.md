@@ -20,10 +20,13 @@ Run Claude Code instances in isolated Docker containers with `--dangerously-skip
 On first run, `cc-sandbox.sh` builds a Docker image (`claude-code-sandbox`) based on `node:lts` with Claude Code installed via the native installer. Each container:
 
 - Mounts your project directory into `/workspace` (read/write)
-- Mounts `~/.claude` and `~/.claude.json` from the host for auth and settings
 - Runs as the `node` user (UID 1000) so file ownership matches your host user
 - Passes `ANTHROPIC_API_KEY` if set
 - Is started with `--rm` so stopped containers are automatically removed
+
+### Host isolation
+
+Host `~/.claude` and `~/.claude.json` are mounted **read-only** into a staging path (`/tmp/claude-host`). On startup, the entrypoint copies them into the container's local filesystem so Claude Code has a writable `~/.claude` that is fully isolated from the host. When the container exits (`--rm`), the copy is discarded. The host's config, credentials, and session history are never modified by a sandbox container.
 
 ## cc-sandbox.sh
 
@@ -84,8 +87,13 @@ Container names accept both `my-feature` and `cc-my-feature` formats.
 ~/cc-manage.sh rebuild
 ```
 
+## Limitations
+
+- **No session resume.** Each sandbox runs with an isolated copy of `~/.claude` that is discarded on exit. `--resume` / `--continue` will not work across container runs. Each invocation starts a fresh session.
+- **Project directory is read-write.** File changes made by Claude Code write directly to your host filesystem. This is intentional — the project is the work surface. Because the container runs as your host UID, file ownership is preserved.
+
 ## Notes
 
 - Containers are started with `--rm`, so they auto-remove when stopped. The `rm` command is mainly useful if a container gets into a stuck state.
-- File changes made by Claude Code inside the container write directly to your host filesystem. Because the container runs as UID 1000 (matching the default WSL user), file ownership is preserved.
+- Multiple sandbox containers can run concurrently. Each gets its own isolated copy of `~/.claude`, so there are no conflicts.
 - The Docker image only needs to be built once. To pick up a new version of Claude Code, run `cc-manage.sh rebuild` and then start a new instance.

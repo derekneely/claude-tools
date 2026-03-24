@@ -24,7 +24,17 @@ if [ "$TARGET_UID" != "$CURRENT_UID" ]; then
   usermod -u "$TARGET_UID" node
 fi
 
-# Fix ownership of home directory and Claude Code install
+# Copy host .claude into a writable container-local path
+# Mounted read-only at /tmp to avoid Docker overlay conflicts in /home/node
+if [ -d /tmp/claude-host ]; then
+  rm -rf /home/node/.claude/*  /home/node/.claude/.[!.]* 2>/dev/null || true
+  cp -af /tmp/claude-host/. /home/node/.claude/
+fi
+if [ -f /tmp/claude-host.json ]; then
+  cp -af /tmp/claude-host.json /home/node/.claude.json
+fi
+
+# Fix ownership of home directory
 chown -R node:node /home/node
 
 exec gosu node "$@"
