@@ -60,10 +60,18 @@ if [[ -f "$HOME/.claude.json" ]]; then
   VOLUMES+=(-v "$HOME/.claude.json":/tmp/claude-host.json:ro)
 fi
 
+# Pass host git identity so commits inside the cage just work
+GIT_USER_NAME="$(git config --global user.name 2>/dev/null || true)"
+GIT_USER_EMAIL="$(git config --global user.email 2>/dev/null || true)"
+
 docker run --rm -it \
   --name "$CONTAINER_NAME" \
   "${VOLUMES[@]}" \
   -e HOST_UID="$HOST_UID" \
   -e HOST_GID="$HOST_GID" \
   -e ANTHROPIC_API_KEY="${ANTHROPIC_API_KEY:-}" \
+  -e GIT_AUTHOR_NAME="${GIT_USER_NAME}" \
+  -e GIT_AUTHOR_EMAIL="${GIT_USER_EMAIL}" \
+  -e GIT_COMMITTER_NAME="${GIT_USER_NAME}" \
+  -e GIT_COMMITTER_EMAIL="${GIT_USER_EMAIL}" \
   "$IMAGE_NAME" "$@"
