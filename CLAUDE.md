@@ -4,17 +4,17 @@ This repo contains scripts, skills, and configuration for Derek's Claude Code se
 
 ## Repository Structure
 
-- `sandbox/` — Docker sandbox for running Claude Code in isolated containers
-  - `cc-sandbox.sh` — Launch a sandboxed Claude Code instance
+- `cage/` — Docker cage for running Claude Code in isolated containers
+  - `cc-cage.sh` — Launch a caged Claude Code instance
   - `cc-manage.sh` — Manage (list, stop, kill, remove) containers
-  - `install.sh` — Symlink sandbox scripts into `~/.local/bin`
-  - `docker/` — Dockerfile and entrypoint script for the sandbox image
+  - `install.sh` — Symlink cage scripts into `~/.local/bin`
+  - `docker/` — Dockerfile and entrypoint script for the cage image
 
 ## Environment
 
 - Targets Linux, WSL2, and macOS
 - Docker required (Docker Desktop or native)
-- All containers use the `cc-` prefix and the `claude-code-sandbox` Docker image
+- All containers use the `cc-` prefix and the `claude-code-cage` Docker image
 
 ## Conventions
 

@@ -1,4 +1,4 @@
-# Claude Code Docker Sandbox Tools
+# Claude Code Cage
 
 Run Claude Code instances in isolated Docker containers with `--dangerously-skip-permissions` enabled. Each instance gets its own container with your project mounted as a volume.
 
@@ -12,12 +12,12 @@ Run Claude Code instances in isolated Docker containers with `--dangerously-skip
 
 | Script | Purpose |
 |---|---|
-| `cc-sandbox.sh` | Launch a new sandboxed Claude Code instance |
+| `cc-cage.sh` | Launch a new caged Claude Code instance |
 | `cc-manage.sh` | List, stop, kill, and clean up instances |
 
 ## How It Works
 
-On first run, `cc-sandbox.sh` builds a Docker image (`claude-code-sandbox`) based on `node:lts` with Claude Code installed via the native installer. Each container:
+On first run, `cc-cage.sh` builds a Docker image (`claude-code-cage`) based on `node:lts` with Claude Code installed via the native installer. Each container:
 
 - Mounts your project directory into `/workspace` (read/write)
 - Runs as the `node` user (UID 1000) so file ownership matches your host user
@@ -26,14 +26,14 @@ On first run, `cc-sandbox.sh` builds a Docker image (`claude-code-sandbox`) base
 
 ### Host isolation
 
-Host `~/.claude` and `~/.claude.json` are mounted **read-only** into a staging path (`/tmp/claude-host`). On startup, the entrypoint copies them into the container's local filesystem so Claude Code has a writable `~/.claude` that is fully isolated from the host. When the container exits (`--rm`), the copy is discarded. The host's config, credentials, and session history are never modified by a sandbox container.
+Host `~/.claude` and `~/.claude.json` are mounted **read-only** into a staging path (`/tmp/claude-host`). On startup, the entrypoint copies them into the container's local filesystem so Claude Code has a writable `~/.claude` that is fully isolated from the host. When the container exits (`--rm`), the copy is discarded. The host's config, credentials, and session history are never modified by a caged container.
 
-## cc-sandbox.sh
+## cc-cage.sh
 
 ### Usage
 
 ```bash
-cc-sandbox.sh <name> [project-dir] [claude args...]
+cc-cage.sh <name> [project-dir] [claude args...]
 ```
 
 - `<name>` — identifier for this instance (container will be named `cc-<name>`)
@@ -44,13 +44,13 @@ cc-sandbox.sh <name> [project-dir] [claude args...]
 
 ```bash
 # Start an instance for a specific project
-~/cc-sandbox.sh my-feature ~/work/my-project
+~/cc-cage.sh my-feature ~/work/my-project
 
 # Start with a prompt
-~/cc-sandbox.sh quick-fix . "fix the broken login test"
+~/cc-cage.sh quick-fix . "fix the broken login test"
 
 # Rebuild the image (e.g., after a Claude Code update)
-docker rmi claude-code-sandbox && ~/cc-sandbox.sh my-feature
+docker rmi claude-code-cage && ~/cc-cage.sh my-feature
 ```
 
 ## cc-manage.sh
@@ -65,7 +65,7 @@ docker rmi claude-code-sandbox && ~/cc-sandbox.sh my-feature
 | `kill <name\|all>` | Force kill one or all containers |
 | `rm <name\|all>` | Remove one or all containers |
 | `nuke` | Stop and remove all `cc-*` containers |
-| `rebuild` | Delete the `claude-code-sandbox` image to force rebuild |
+| `rebuild` | Delete the `claude-code-cage` image to force rebuild |
 | `logs <name>` | View logs for a container |
 | `attach <name>` | Reattach to a running container's terminal |
 
@@ -89,11 +89,11 @@ Container names accept both `my-feature` and `cc-my-feature` formats.
 
 ## Limitations
 
-- **No session resume.** Each sandbox runs with an isolated copy of `~/.claude` that is discarded on exit. `--resume` / `--continue` will not work across container runs. Each invocation starts a fresh session.
+- **No session resume.** Each cage runs with an isolated copy of `~/.claude` that is discarded on exit. `--resume` / `--continue` will not work across container runs. Each invocation starts a fresh session.
 - **Project directory is read-write.** File changes made by Claude Code write directly to your host filesystem. This is intentional — the project is the work surface. Because the container runs as your host UID, file ownership is preserved.
 
 ## Notes
 
 - Containers are started with `--rm`, so they auto-remove when stopped. The `rm` command is mainly useful if a container gets into a stuck state.
-- Multiple sandbox containers can run concurrently. Each gets its own isolated copy of `~/.claude`, so there are no conflicts.
+- Multiple caged containers can run concurrently. Each gets its own isolated copy of `~/.claude`, so there are no conflicts.
 - The Docker image only needs to be built once. To pick up a new version of Claude Code, run `cc-manage.sh rebuild` and then start a new instance.

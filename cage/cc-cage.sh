@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
-# cc-sandbox.sh — Run Claude Code in Docker with --dangerously-skip-permissions
+# cc-cage.sh — Run Claude Code in Docker with --dangerously-skip-permissions
 #
 # Usage:
-#   ./cc-sandbox.sh <name> [project-dir] [claude args...]
+#   ./cc-cage.sh <name> [project-dir] [claude args...]
 #
 # Examples:
-#   ./cc-docker.sh frontend .
-#   ./cc-docker.sh backend ~/projects/api
-#   ./cc-docker.sh refactor . "refactor the auth module"
+#   ./cc-cage.sh frontend .
+#   ./cc-cage.sh backend ~/projects/api
+#   ./cc-cage.sh refactor . "refactor the auth module"
 #
 # To rebuild the image (e.g., to update Claude Code):
-#   docker rmi claude-code-sandbox && ./cc-docker.sh <name>
+#   docker rmi claude-code-cage && ./cc-cage.sh <name>
 
 set -euo pipefail
 
-IMAGE_NAME="claude-code-sandbox"
+IMAGE_NAME="claude-code-cage"
 SCRIPT_DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 
 if [[ $# -lt 1 ]]; then
-  echo "Usage: cc-sandbox.sh <name> [project-dir] [claude args...]"
+  echo "Usage: cc-cage.sh <name> [project-dir] [claude args...]"
   exit 1
 fi
 

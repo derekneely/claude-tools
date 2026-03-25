@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — Symlink sandbox scripts into ~/.local/bin
+# install.sh — Symlink cage scripts into ~/.local/bin
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -8,7 +8,7 @@ BIN_DIR="$HOME/.local/bin"
 mkdir -p "$BIN_DIR"
 
 LINKS=(
-  "cc-sandbox.sh:cc-sandbox"
+  "cc-cage.sh:cc-cage"
   "cc-manage.sh:cc-manage"
 )
 
