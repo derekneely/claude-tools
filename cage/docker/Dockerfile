@@ -17,6 +17,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
 RUN curl -fsSL https://go.dev/dl/go1.24.1.linux-amd64.tar.gz | tar -C /usr/local -xz
 ENV PATH="/usr/local/go/bin:${PATH}"
 
+# Install uv (Python package manager)
+RUN curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=/usr/local/bin sh
+
 # Create non-root user for Claude Code install
 RUN useradd -m -s /bin/bash claude
 USER claude
